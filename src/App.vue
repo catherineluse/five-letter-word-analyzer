@@ -73,7 +73,10 @@ export default {
       for (let i = 0; i < positions.length; i++) {
         for (let j = 0; j < alphabet.length; j++) {
           let letter = alphabet[j];
-          freq.value[i][letter] = 0;
+          freq.value[i][letter] = {
+            count: 0,
+            words: []
+          }
         }
       }
 
@@ -85,7 +88,17 @@ export default {
 
         for (let j = 0; j < word.length; j++) {
           const letter = word[j];
-          freq.value[j][letter] += 1;
+          freq.value[j][letter].words.push(word)
+        }
+      }
+
+      for (let i = 0; i < positions.length; i++) {
+        for (let j = 0; j < alphabet.length; j++) {
+          let letter = alphabet[j];
+          let words = freq.value[i][letter].words;
+          let dedupedWords = [...new Set(words)]
+          freq.value[i][letter].words = dedupedWords;
+          freq.value[i][letter].count = dedupedWords.length;
         }
       }
       return freq.value;
@@ -143,8 +156,8 @@ export default {
           continue;
         }
         const letter = word[i]
-        const sameLetterAtSamePosition = this.freq[i][letter]
-        commonality += (sameLetterAtSamePosition - 1)
+        let wordsWithSameLetterAtSamePosition = this.freq[i][letter].words;
+        commonality += wordsWithSameLetterAtSamePosition.length;
       }
       return commonality;
     }
@@ -215,15 +228,15 @@ export default {
         v-for="position in positions"
         :style="{
           'background-color': getColorGradient(
-            (freq[position][letter] / remainingWordlist.length).toFixed(2)
+            (freq[position][letter].count / remainingWordlist.length).toFixed(2)
           ).toString(),
         }"
       >
         {{
           `${(
-            (freq[position][letter] / remainingWordlist.length) *
+            (freq[position][letter].count / remainingWordlist.length) *
             100
-          ).toFixed(2)}% (${freq[position][letter]})`
+          ).toFixed(2)}% (${freq[position][letter].count})`
         }}
       </td>
     </tr>
