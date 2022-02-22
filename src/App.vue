@@ -39,25 +39,24 @@ export default {
         ) {
           return false;
         }
+      }
+      // If it has letters we know are not in the word
+      // in any position, the word is invalid.
+      for (let j = 0; j < excludeLetters.value.length; j++) {
+        const excludeLetter = excludeLetters.value[j];
 
-        // If it has letters we know are not in the word
-        // in any position, the word is invalid.
-        for (let j = 0; j < excludeLetters.value.length; j++) {
-          const excludeLetter = excludeLetters.value[j];
-
-          if (word.includes(excludeLetter)) {
-            return false;
-          }
+        if (word.includes(excludeLetter)) {
+          return false;
         }
+      }
 
-        // If it doesn't have letters we know are somewhere in
-        // the word, the word is invalid.
-        for (let j = 0; j < includeLetters.value.length; j++) {
-          const includeLetter = includeLetters.value[j];
+      // If it doesn't have letters we know are somewhere in
+      // the word, the word is invalid.
+      for (let j = 0; j < includeLetters.value.length; j++) {
+        const includeLetter = includeLetters.value[j];
 
-          if (!word.includes(includeLetter)) {
-            return false;
-          }
+        if (!word.includes(includeLetter)) {
+          return false;
         }
       }
       return true;
